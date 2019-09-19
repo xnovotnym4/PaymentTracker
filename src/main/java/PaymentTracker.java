@@ -7,11 +7,21 @@ public class PaymentTracker {
     private static boolean allowCurrencyCheck = true; //allows input to be checked towards listed currencies
 
     public static void main(String [] args) throws IOException {
-        final Map<String, Double> listOfCurrencies = loadCurrenciesRates(System.getProperty("user.dir") + "/../resources/currenciesRate.txt");
+        Map<String, Double> listOfCurrencies = new HashMap<>();
+        try {
+            listOfCurrencies = loadCurrenciesRates(System.getProperty("user.dir") + "/../resources/currenciesRate.txt");
+        }catch (FileNotFoundException e){
+            allowCurrencyCheck = false;
+            System.out.println("Currencies rate file was not found!");
+        }
         PaymentsList paymentsList = new PaymentsList(allowCurrencyCheck, listOfCurrencies, printTimer);
 
         if(args.length != 0){
-            paymentsList.loadFromFile(args[0]);
+            try {
+                paymentsList.loadFromFile(args[0]);
+            }catch (FileNotFoundException e){
+                System.out.println("Input file path incorrectly specified!");
+            }
         }
 
         Thread thread1 = new Thread () {
