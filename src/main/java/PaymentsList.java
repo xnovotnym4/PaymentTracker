@@ -85,9 +85,14 @@ public class PaymentsList {
         while ((lineString = br.readLine()) != null)   {
             try {
                 String[] payment = lineString.split(" ");
+                if(allowCurrencyCheck){
+                    if(listOfCurrencies.get(payment[0]) == null && !payment[0].equals("USD")){
+                        throw new Exception("Specified currency is not allowed!");
+                    }
+                }
                 list.add(new Payment(payment[0].trim(), Integer.parseInt(payment[1].trim())));
             }catch (Exception e){
-                System.out.println("Invalid format of payment in input file: '" + lineString + "'");
+                System.out.println("Invalid format or currency code of payment in input file: '" + lineString + "'");
             }
         }
 
